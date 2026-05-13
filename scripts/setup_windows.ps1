@@ -2,6 +2,9 @@
 Bootstrap para Windows.
 
 Uso recomendado desde PowerShell:
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; & ([scriptblock]::Create((Invoke-RestMethod 'https://raw.githubusercontent.com/TataInti/clases/main/scripts/setup_windows.ps1')))"
+
+Si ya tienes el repositorio clonado:
   powershell -ExecutionPolicy Bypass -File .\scripts\setup_windows.ps1
 
 Tambien se puede ejecutar desde cualquier carpeta:
@@ -115,6 +118,16 @@ function Get-CodeCli {
     }
 
     throw "No se encontro la CLI de VS Code despues de instalarlo. Cierra y abre PowerShell, o verifica que 'code' este en PATH."
+}
+
+function Test-VSCodeCli {
+    try {
+        [void](Get-CodeCli)
+        return $true
+    }
+    catch {
+        return $false
+    }
 }
 
 function Get-Python312Info {
@@ -296,12 +309,22 @@ function Initialize-VirtualEnvironment {
     $venvPath = Join-Path $RepoPath ".venv"
     $venvPython = Join-Path $venvPath "Scripts\python.exe"
     $requirementsPath = Join-Path $RepoPath "requirements.txt"
+    $createVenv = $true
 
-    if (-not (Test-Path -LiteralPath $venvPython)) {
-        Invoke-Python312 $PythonInfo @("-m", "venv", $venvPath) "Creando entorno virtual .venv"
+    if (Test-Path -LiteralPath $venvPython) {
+        $venvVersion = & $venvPython -c "import sys; print('.'.join(map(str, sys.version_info[:3])))" 2>$null
+        if ($LASTEXITCODE -eq 0 -and $venvVersion.Trim() -eq $PythonVersion) {
+            Write-Host "OK: el entorno virtual ya existe en $venvPath."
+            $createVenv = $false
+        }
+        else {
+            Write-Warning "El entorno virtual existente no usa Python $PythonVersion. Se recreara .venv."
+            Remove-Item -LiteralPath $venvPath -Recurse -Force
+        }
     }
-    else {
-        Write-Host "OK: el entorno virtual ya existe en $venvPath."
+
+    if ($createVenv) {
+        Invoke-Python312 $PythonInfo @("-m", "venv", $venvPath) "Creando entorno virtual .venv"
     }
 
     Invoke-External $venvPython @("-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel", "ipykernel") "Actualizando herramientas base del entorno"
@@ -325,7 +348,17 @@ function Initialize-VirtualEnvironment {
 
 Write-Step "Verificando herramientas de Windows"
 Install-WingetPackage -Id "Git.Git" -Name "Git" -CommandName "git"
-Install-WingetPackage -Id "Microsoft.VisualStudioCode" -Name "Visual Studio Code" -CommandName "code"
+if (-not (Test-Command "git")) {
+    throw "Git esta instalado, pero no se encontro en PATH. Cierra y abre PowerShell, y vuelve a ejecutar este script."
+}
+
+if (Test-VSCodeCli) {
+    Write-Host "OK: Visual Studio Code ya esta instalado."
+}
+else {
+    Install-WingetPackage -Id "Microsoft.VisualStudioCode" -Name "Visual Studio Code"
+}
+
 $codeCli = Get-CodeCli
 
 $pythonInfo = Install-Python3123
