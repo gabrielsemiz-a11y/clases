@@ -59,6 +59,8 @@ Este repositorio contiene el material de clases para el curso de **IA Aplicada**
 - **Clase 2**: Vibe coding: personalizar y mejorar la app con IA
 - **Clase 3**: RAG con PDF y embeddings
 - **Clase 4**: JEV, el LLM para decisiones (modelos System One)
+- **Clase 5**: [Análisis exploratorio de datos de crédito](<modulo_5/Clase 5 - Analisis exploratorio de datos de credito.md>) — trabajo en dos grupos con Python e IA
+- **Clase 6**: [Análisis de negocio y selección de modelo](<modulo_5/Clase 6 - Analisis de negocio y seleccion de modelo.md>) — continuación y defensa de los hallazgos
 - Demo funcional de RAG (`modulo_5/rag_demo.ipynb`)
 
 ## Guía de Instalación Paso a Paso
