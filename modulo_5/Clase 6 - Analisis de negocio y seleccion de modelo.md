@@ -76,12 +76,8 @@ Los grupos mantienen su trabajo anterior. Pueden reformular la pregunta si los h
 1. Definí el problema, quién usaría el resultado y qué decisión ayudaría a tomar.
 2. Elegí indicadores y realizá las comparaciones adicionales necesarias en Python.
 3. Separá hallazgos observados, hipótesis y recomendaciones.
-4. Definí la tarea del modelo, su salida, el momento de uso y las variables que podrían estar disponibles.
-5. Compará dos alternativas y justificá una. Incluí una referencia sencilla sin modelo y explicá el aporte esperado.
-6. Diseñá cómo evaluarías la utilidad y los errores más costosos. No inventes métricas obtenidas.
-7. Prepará una recomendación, sus límites y los datos adicionales necesarios para validarla.
+4. Prepará una recomendación, sus límites y los datos adicionales necesarios para validarla.
 
-Como referencia: 10 minutos para problema e indicadores, 15 para profundizar y verificar evidencia, 10 para modelos y evaluación, y 10 para preparar la defensa.
 
 ### Cómo apoyarse en la IA
 
